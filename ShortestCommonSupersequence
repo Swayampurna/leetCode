@@ -1,0 +1,62 @@
+class Solution {
+    public String shortestCommonSupersequence(String str1, String str2) 
+    {
+        int n = str1.length();
+        int m = str2.length();
+
+        String[][] dp = new String[n][m];
+        dp[0][0] = str1.charAt(0) == str2.charAt(0) ? ""+ str1.charAt(0) : "" +str1.charAt(0) + str2.charAt(0);
+
+        //initialization ....set up base cases for str1 and str2 first characters
+        for(int i=1; i<n; i++)
+        {
+            if(str1.charAt(i) == str2.charAt(0))
+            {
+                dp[i][0] = str1.substring(0,i) + str1.charAt(i);
+            }
+            else
+            {
+                /// important
+                /// if characters don't match, we need to append new character to previous string
+                dp[i][0] = dp[i-1][0] + str1.charAt(i);
+            }
+        }
+        for(int j=1; j<m; j++)
+        {
+            if(str1.charAt(0) == str2.charAt(j))
+            {
+                dp[0][j] = str2.substring(0,j) + str2.charAt(j);
+            }
+            else
+            {
+                dp[0][j] = dp[0][j-1] + str2.charAt(j);
+            }
+        }
+        //initialization done 
+
+        for(int i=1; i<n; i++)
+        {
+            for(int j=1; j<m; j++)
+            {
+                if(str1.charAt(i) == str2.charAt(j))
+                {
+                    // subsequence
+                    dp[i][j] = dp[i-1][j-1] + str1.charAt(i);
+                }
+                else
+                {
+                    if(dp[i-1][j].length() <= dp[i][j-1].length())
+                    {
+                        dp[i][j] = dp[i-1][j] + str1.charAt(i);
+                    }
+                    else
+                    {
+                        dp[i][j] = dp[i][j-1] + str2.charAt(j);
+                    }
+                    
+                }
+            }
+        }
+        return dp[n-1][m-1];
+    }
+}
